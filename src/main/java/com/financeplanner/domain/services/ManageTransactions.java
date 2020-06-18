@@ -2,6 +2,7 @@ package com.financeplanner.domain.services;
 
 import com.financeplanner.domain.Transaction;
 import com.financeplanner.domain.TransactionRepository;
+import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +16,10 @@ public class ManageTransactions {
 
     public int addTransaction(Transaction transaction) {
         return transactionRepository.saveTransaction(transaction);
+    }
+
+    public Collection<Transaction> getAllTransactions() {
+        return transactionRepository.fetchAllTransactions();
     }
 
 }

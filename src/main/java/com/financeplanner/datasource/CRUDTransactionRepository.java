@@ -24,4 +24,8 @@ public interface CRUDTransactionRepository extends CrudRepository<Transaction, I
         return transactions;
     }
 
+    default void deleteTransaction(int id) {
+        this.deleteById(id);
+    }
+
 }

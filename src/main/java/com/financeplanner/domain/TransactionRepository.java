@@ -10,4 +10,6 @@ public interface TransactionRepository {
 
     Collection<Transaction> fetchAllTransactions();
 
+    void deleteTransaction(int id);
+
 }

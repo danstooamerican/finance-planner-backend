@@ -41,6 +41,13 @@ public class TransactionController {
         return ResponseEntity.ok().body(null);
     }
 
+    @PostMapping("/delete-transaction")
+    public ResponseEntity<Void> deleteTransaction(@RequestBody int id) {
+        manageTransactions.deleteTransaction(id);
+
+        return ResponseEntity.ok().body(null);
+    }
+
     @GetMapping("/transactions")
     public ResponseEntity<Collection<Transaction>> getAllTransactions() {
         return ResponseEntity.ok(manageTransactions.getAllTransactions());

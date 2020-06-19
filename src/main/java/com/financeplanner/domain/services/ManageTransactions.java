@@ -19,8 +19,12 @@ public class ManageTransactions {
     }
 
 
-    public int editTransaction(Transaction transaction) {
-        return transactionRepository.saveTransaction(transaction);
+    public void editTransaction(Transaction transaction) {
+        transactionRepository.saveTransaction(transaction);
+    }
+
+    public void deleteTransaction(int id) {
+        transactionRepository.deleteTransaction(id);
     }
 
     public Collection<Transaction> getAllTransactions() {

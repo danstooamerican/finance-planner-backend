@@ -18,6 +18,11 @@ public class ManageTransactions {
         return transactionRepository.saveTransaction(transaction);
     }
 
+
+    public int editTransaction(Transaction transaction) {
+        return transactionRepository.saveTransaction(transaction);
+    }
+
     public Collection<Transaction> getAllTransactions() {
         return transactionRepository.fetchAllTransactions();
     }

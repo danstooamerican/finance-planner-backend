@@ -30,6 +30,17 @@ public class TransactionController {
         return ResponseEntity.ok(id);
     }
 
+    @PostMapping("/edit-transaction")
+    public ResponseEntity<Void> editTransaction(@RequestBody Transaction transaction) {
+        if (transaction == null) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        manageTransactions.editTransaction(transaction);
+
+        return ResponseEntity.ok().body(null);
+    }
+
     @GetMapping("/transactions")
     public ResponseEntity<Collection<Transaction>> getAllTransactions() {
         return ResponseEntity.ok(manageTransactions.getAllTransactions());

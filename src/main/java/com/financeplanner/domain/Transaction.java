@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -21,10 +18,11 @@ public class Transaction {
 
     private LocalDate date;
     private String description;
-    private String category;
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Category category;
     private double amount;
 
-    public Transaction(double amount, String category, String description, LocalDate date) {
+    public Transaction(double amount, Category category, String description, LocalDate date) {
         this.amount = amount;
         this.category = category;
         this.description = description;

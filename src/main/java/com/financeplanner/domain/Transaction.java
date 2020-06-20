@@ -18,7 +18,7 @@ public class Transaction {
 
     private LocalDate date;
     private String description;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Category category;
     private double amount;
 

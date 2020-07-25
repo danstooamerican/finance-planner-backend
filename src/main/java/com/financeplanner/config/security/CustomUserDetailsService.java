@@ -1,6 +1,5 @@
 package com.financeplanner.config.security;
 
-import com.financeplanner.datasource.CRUDUserRepository;
 import com.financeplanner.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;

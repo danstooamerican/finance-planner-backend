@@ -1,9 +1,7 @@
 package com.financeplanner.domain.services;
 
-import com.financeplanner.domain.Category;
-import com.financeplanner.domain.CategoryRepository;
-import com.financeplanner.domain.Transaction;
-import com.financeplanner.domain.TransactionRepository;
+import com.financeplanner.domain.*;
+
 import java.util.Collection;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +16,7 @@ public class ManageTransactions {
 
     /**
      * Creates a new {@link ManageTransactions}.
+     *
      * @param transactionRepository used to access {@link Transaction} objects.
      * @param categoryRepository used to access {@link Category} objects.
      */
@@ -28,29 +27,34 @@ public class ManageTransactions {
 
     /**
      * Adds a new {@link Transaction transaction}.
-     * @param transaction the {@link Transaction transactionn} to save.
+     *
+     * @param transaction the {@link Transaction transaction} to save.
+     * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      * @return the id of the new {@link Transaction transaction}.
      */
-    public int addTransaction(Transaction transaction) {
-        return saveTransaction(transaction);
+    public int addTransaction(Transaction transaction, Long userId) {
+        return saveTransaction(transaction, userId);
     }
 
     /**
-     * Edits an existing {@link Transaction transaction}
+     * Edits an existing {@link Transaction transaction}.
+     *
      * @param transaction the new {@link Transaction transaction}.
+     * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      */
-    public void editTransaction(Transaction transaction) {
-        saveTransaction(transaction);
+    public void editTransaction(Transaction transaction, Long userId) {
+        saveTransaction(transaction, userId);
     }
 
-    private int saveTransaction(Transaction transaction) {
+    private int saveTransaction(Transaction transaction, Long userId) {
         categoryRepository.save(transaction.getCategory());
 
-        return transactionRepository.save(transaction);
+        return transactionRepository.save(transaction, userId);
     }
 
     /**
      * Deletes an existing {@link Transaction transaction} with the given id.
+     *
      * @param id the id of the {@link Transaction transaction}.
      */
     public void deleteTransaction(int id) {
@@ -58,10 +62,13 @@ public class ManageTransactions {
     }
 
     /**
+     * Finds all stored {@link Transaction transactions} belonging to the given {@link User user}.
+     *
+     * @param userId the id of the {@link User user} which belongs to the {@link Transaction transactions}.
      * @return all added {@link Transaction transactions}.
      */
-    public Collection<Transaction> getAllTransactions() {
-        return transactionRepository.findAllTransactions();
+    public Collection<Transaction> getAllTransactions(Long userId) {
+        return transactionRepository.findAllTransactions(userId);
     }
 
 }

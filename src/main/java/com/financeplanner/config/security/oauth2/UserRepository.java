@@ -11,6 +11,7 @@ public interface UserRepository {
 
     /**
      * Finds the {@link User user} with the given email.
+     *
      * @param email the email of the {@link User user}.
      * @return the {@link User user} with the email or null wrapped in an {@link Optional}.
      */
@@ -19,9 +20,18 @@ public interface UserRepository {
     /**
      * Stores a given {@link User user}. If the transaction is already stored all parameters
      * are updated.
+     *
      * @param user the {@link User user} to store.
      * @return the id of the {@link User user}
      */
     User save(User user);
+
+    /**
+     * Finds the {@link User user} with the given id.
+     *
+     * @param id the id of the {@link User user}.
+     * @return the {@link User user} with the id wrapped in an {@link Optional}.
+     */
+    Optional<User> findById(Long id);
 
 }

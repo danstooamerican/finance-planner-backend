@@ -1,6 +1,9 @@
 package com.financeplanner.presentation;
 
+import com.financeplanner.config.security.CurrentUser;
+import com.financeplanner.config.security.UserPrincipal;
 import com.financeplanner.domain.Transaction;
+import com.financeplanner.domain.User;
 import com.financeplanner.domain.services.ManageTransactions;
 import java.util.Collection;
 import org.springframework.http.HttpStatus;
@@ -20,23 +23,23 @@ public class TransactionController {
     }
 
     @PostMapping("/add-transaction")
-    public ResponseEntity<Integer> addTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<Integer> addTransaction(@RequestBody Transaction transaction, @CurrentUser UserPrincipal user) {
         if (transaction == null) {
             return ResponseEntity.badRequest().body(null);
         }
 
-        final int id = manageTransactions.addTransaction(transaction);
+        final int id = manageTransactions.addTransaction(transaction, user.getId());
 
         return ResponseEntity.ok(id);
     }
 
     @PostMapping("/edit-transaction")
-    public ResponseEntity<Void> editTransaction(@RequestBody Transaction transaction) {
+    public ResponseEntity<Void> editTransaction(@RequestBody Transaction transaction, @CurrentUser UserPrincipal user) {
         if (transaction == null) {
             return ResponseEntity.badRequest().body(null);
         }
 
-        manageTransactions.editTransaction(transaction);
+        manageTransactions.editTransaction(transaction, user.getId());
 
         return ResponseEntity.ok().body(null);
     }
@@ -49,8 +52,8 @@ public class TransactionController {
     }
 
     @GetMapping("/transactions")
-    public ResponseEntity<Collection<Transaction>> getAllTransactions() {
-        return ResponseEntity.ok(manageTransactions.getAllTransactions());
+    public ResponseEntity<Collection<Transaction>> getAllTransactions(@CurrentUser UserPrincipal user) {
+        return ResponseEntity.ok(manageTransactions.getAllTransactions(user.getId()));
     }
 
 }

@@ -20,6 +20,9 @@ public class JDBCUserRepository implements UserRepository {
     private static final String findByEmailQuery =
             "select * from user where email = ? limit 1";
 
+    private static final String findByIdQuery =
+            "select * from user where id = ? limit 1";
+
     private static final String insertOrUpdateUserQuery =
             "insert into user (id, name, provider, provider_id, email, image_url, password) " +
                     "values (:id, :name, :provider, :provider_id, :email, :image_url, :password) on DUPLICATE key " +
@@ -58,10 +61,17 @@ public class JDBCUserRepository implements UserRepository {
 
         Number id = keyHolder.getKey();
         if (id != null) {
-            user.setId(id.intValue());
+            user.setId(id.longValue());
         }
 
         return user;
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        User user = jdbcTemplate.queryForObject(findByIdQuery, new UserMapper(), id);
+
+        return Optional.ofNullable(user);
     }
 
 }

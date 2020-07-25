@@ -5,20 +5,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.persistence.*;
-
-@Entity
 @NoArgsConstructor
 @Getter
 @ToString
 public class Transaction {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
     private LocalDate date;
     private String description;
-    @ManyToOne
     private Category category;
     private double amount;
 

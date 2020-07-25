@@ -44,9 +44,9 @@ public class ManageTransactions {
     }
 
     private int saveTransaction(Transaction transaction) {
-        categoryRepository.saveCategory(transaction.getCategory());
+        categoryRepository.save(transaction.getCategory());
 
-        return transactionRepository.saveTransaction(transaction);
+        return transactionRepository.save(transaction);
     }
 
     /**
@@ -54,14 +54,14 @@ public class ManageTransactions {
      * @param id the id of the {@link Transaction transaction}.
      */
     public void deleteTransaction(int id) {
-        transactionRepository.deleteTransaction(id);
+        transactionRepository.delete(id);
     }
 
     /**
      * @return all added {@link Transaction transactions}.
      */
     public Collection<Transaction> getAllTransactions() {
-        return transactionRepository.fetchAllTransactions();
+        return transactionRepository.findAllTransactions();
     }
 
 }

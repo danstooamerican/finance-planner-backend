@@ -35,7 +35,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void saveCategory(Category category) {
+    public void save(Category category) {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", category.getId())
                 .addValue("name", category.getName())
@@ -52,7 +52,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void deleteCategory(int id) {
+    public void delete(int id) {
         jdbcTemplate.update(deleteCategoryQuery, id);
     }
 

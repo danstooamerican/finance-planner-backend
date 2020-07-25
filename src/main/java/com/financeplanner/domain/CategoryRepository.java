@@ -7,9 +7,9 @@ import java.util.Collection;
 @Repository
 public interface CategoryRepository {
 
-    int saveCategory(Category category);
+    void saveCategory(Category category);
 
-    Collection<Category> fetchAllCategories();
+    Collection<Category> findAllCategories();
 
     void deleteCategory(int id);
 

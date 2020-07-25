@@ -21,6 +21,7 @@ public interface TransactionRepository {
 
     /**
      * Finds all currently stored {@link Transaction transactions} which belong to the {@link User user}.
+     *
      * @param userId the id of the {@link User user}.
      * @return all {@link Transaction transactions}.
      */

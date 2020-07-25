@@ -13,6 +13,10 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Collection;
 
+/**
+ * Implementation of {@link TransactionRepository} which
+ * uses JDBC and MySQL to access stored {@link Transaction transactions}.
+ */
 @Repository
 public class JDBCTransactionRepository implements TransactionRepository {
 
@@ -31,6 +35,11 @@ public class JDBCTransactionRepository implements TransactionRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /**
+     * Creates a new {@link JDBCTransactionRepository}.
+     *
+     * @param dataSource the {@link DataSource data source} which is used to access the data.
+     */
     public JDBCTransactionRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);

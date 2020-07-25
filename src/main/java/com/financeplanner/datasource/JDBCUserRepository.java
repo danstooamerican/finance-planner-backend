@@ -14,6 +14,10 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Optional;
 
+/**
+ * Implementation of {@link UserRepository} which
+ * uses JDBC and MySQL to access stored {@link User user}.
+ */
 @Repository
 public class JDBCUserRepository implements UserRepository {
 
@@ -32,6 +36,11 @@ public class JDBCUserRepository implements UserRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /**
+     * Creates a new {@link JDBCUserRepository}.
+     *
+     * @param dataSource the {@link DataSource data source} which is used to access the data.
+     */
     public JDBCUserRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);

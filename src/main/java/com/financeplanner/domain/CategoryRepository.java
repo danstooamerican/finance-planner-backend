@@ -11,10 +11,10 @@ import java.util.Collection;
 public interface CategoryRepository {
 
     /**
-     * Stores a given {@link Category category}. If the transaction is already stored all parameters
-     * are updated.
+     * Stores a given {@link Category category}.
+     * If the transaction is already stored all parameters are updated.
+     *
      * @param category the {@link Category category} to store.
-     * @return the id of the {@link Category category}
      */
     void save(Category category);
 
@@ -25,6 +25,7 @@ public interface CategoryRepository {
 
     /**
      * Deletes a stored {@link Category category} with the given id.
+     *
      * @param id the id of the {@link Category category} which is deleted.
      */
     void delete(int id);

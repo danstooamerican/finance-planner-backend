@@ -5,9 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-@NoArgsConstructor
+/**
+ * Represents a transaction which was created by an {@link User user}.
+ */
 @Getter
 @ToString
+@NoArgsConstructor
 public class Transaction {
 
     private int id;

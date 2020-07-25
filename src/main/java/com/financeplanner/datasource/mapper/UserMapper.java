@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.RowMapper;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Maps a {@link ResultSet result set} to an {@link User user}.
+ */
 public class UserMapper implements RowMapper<User> {
 
     @Override

@@ -5,6 +5,9 @@ import com.financeplanner.config.security.AuthProvider;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Represents an user who can create {@link Transaction transactions}.
+ */
 @Getter
 @Setter
 public class User {

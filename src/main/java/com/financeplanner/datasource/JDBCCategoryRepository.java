@@ -11,6 +11,10 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.util.Collection;
 
+/**
+ * Implementation of {@link CategoryRepository} which
+ * uses JDBC and MySQL to access stored {@link Category categories}.
+ */
 @Repository
 public class JDBCCategoryRepository implements CategoryRepository {
 
@@ -29,6 +33,11 @@ public class JDBCCategoryRepository implements CategoryRepository {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+    /**
+     * Creates a new {@link JDBCCategoryRepository}.
+     *
+     * @param dataSource the {@link DataSource data source} which is used to access the data.
+     */
     public JDBCCategoryRepository(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);

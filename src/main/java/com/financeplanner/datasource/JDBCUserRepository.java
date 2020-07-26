@@ -67,7 +67,7 @@ public class JDBCUserRepository implements UserRepository {
                 .addValue("email", user.getEmail())
                 .addValue("name", user.getName())
                 .addValue("password", user.getPassword())
-                .addValue("provider", user.getProvider())
+                .addValue("provider", user.getProvider().name())
                 .addValue("provider_id", user.getProviderId())
                 .addValue("image_url", user.getImageUrl());
 

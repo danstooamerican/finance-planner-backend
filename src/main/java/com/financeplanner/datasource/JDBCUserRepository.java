@@ -13,8 +13,10 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -31,10 +33,10 @@ public class JDBCUserRepository implements UserRepository {
             "select * from user where id = ? limit 1";
 
     private static final String insertOrUpdateUserQuery =
-            "insert into user (id, name, provider, provider_id, email, image_url, password) " +
-                    "values (:id, :name, :provider, :provider_id, :email, :image_url, :password) on DUPLICATE key " +
+            "insert into user (id, name, provider, provider_id, email, image_url) " +
+                    "values (:id, :name, :provider, :provider_id, :email, :image_url) on DUPLICATE key " +
                     "update name = :name, provider = :provider, provider_id = :provider_id, email = :email," +
-                    "image_url = :image_url, password = :password";
+                    "image_url = :image_url";
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -44,13 +46,17 @@ public class JDBCUserRepository implements UserRepository {
      *
      * @param dataSource the {@link DataSource data source} which is used to access the data.
      */
-    public JDBCUserRepository(DataSource dataSource) {
+    public JDBCUserRepository(@NotNull DataSource dataSource) {
+        Objects.requireNonNull(dataSource);
+
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
-    public Optional<User> findByEmail(String email) {
+    public Optional<User> findByEmail(@NotNull String email) {
+        Objects.requireNonNull(email);
+
         User user;
 
         try {
@@ -63,12 +69,13 @@ public class JDBCUserRepository implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public User save(@NotNull User user) {
+        Objects.requireNonNull(user);
+
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", user.getId())
                 .addValue("email", user.getEmail())
                 .addValue("name", user.getName())
-                .addValue("password", user.getPassword())
                 .addValue("provider", user.getProvider().name())
                 .addValue("provider_id", user.getProviderId())
                 .addValue("image_url", user.getImageUrl());
@@ -79,7 +86,7 @@ public class JDBCUserRepository implements UserRepository {
 
         List<Map<String, Object>> keyList = keyHolder.getKeyList();
 
-        if (!keyList.isEmpty()) {
+        if (keyList.size() == 1) {
             Number id = (Number) keyList.get(0).get("GENERATED_KEY");
 
             if (id != null) {
@@ -91,7 +98,9 @@ public class JDBCUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
+    public Optional<User> findById(@NotNull Long id) {
+        Objects.requireNonNull(id);
+
         User user;
 
         try {

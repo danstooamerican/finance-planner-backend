@@ -21,7 +21,7 @@ import java.util.Collection;
 @Repository
 public class JDBCTransactionRepository implements TransactionRepository {
 
-    private static final String findAllTransactionForUser =
+    private static final String findAllTransactionsForUser =
             "select * from transaction " +
                     "join category c on transaction.category_id = c.id and transaction.user_id = c.user_id " +
                     "where transaction.user_id = ?";
@@ -72,7 +72,7 @@ public class JDBCTransactionRepository implements TransactionRepository {
 
     @Override
     public Collection<Transaction> findAllTransactions(Long userId) {
-        return jdbcTemplate.query(findAllTransactionForUser, new TransactionMapper(), userId);
+        return jdbcTemplate.query(findAllTransactionsForUser, new TransactionMapper(), userId);
     }
 
     @Override

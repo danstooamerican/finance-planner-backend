@@ -2,7 +2,12 @@ package com.financeplanner.config.security.jwt;
 
 import com.financeplanner.config.AppProperties;
 import com.financeplanner.config.security.UserPrincipal;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -48,7 +53,7 @@ public class TokenProvider {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
                 .build()
-                .parseClaimsJwt(token)
+                .parseClaimsJws(token)
                 .getBody();
 
         return Long.parseLong(claims.getSubject());
@@ -63,7 +68,7 @@ public class TokenProvider {
             Jwts.parserBuilder()
                     .setSigningKey(getSigningKey())
                     .build()
-                    .parseClaimsJwt(authToken);
+                    .parseClaimsJws(authToken);
 
             return true;
         } catch (SecurityException ex) {

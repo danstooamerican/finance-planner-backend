@@ -47,4 +47,5 @@ public class JDBCUserRepositoryTest {
 
         assertNotEquals(0, returned.getId());
     }
+
 }

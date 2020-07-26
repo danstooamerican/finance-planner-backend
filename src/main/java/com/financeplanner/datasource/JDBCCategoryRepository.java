@@ -6,6 +6,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -52,7 +54,14 @@ public class JDBCCategoryRepository implements CategoryRepository {
                 .addValue("font_family", category.getIcon().getFontFamily())
                 .addValue("font_package", category.getIcon().getFontPackage());
 
-        namedParameterJdbcTemplate.update(insertOrUpdateCategoryQuery, namedParameters);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        namedParameterJdbcTemplate.update(insertOrUpdateCategoryQuery, namedParameters, keyHolder, new String[] { "id" });
+
+        Number id = keyHolder.getKey();
+        if (id != null) {
+            category.setId(id.intValue());
+        }
     }
 
     @Override

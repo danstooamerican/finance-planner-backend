@@ -1,5 +1,6 @@
 package com.financeplanner.datasource;
 
+import com.financeplanner.datasource.mapper.TransactionMapper;
 import com.financeplanner.domain.Transaction;
 import com.financeplanner.domain.TransactionRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +22,7 @@ import java.util.Collection;
 public class JDBCTransactionRepository implements TransactionRepository {
 
     private static final String findAllTransactionForUser =
-            "select * from transaction where user_id = ?";
+            "select * from transaction join category c on transaction.category_id = c.id where user_id = ?";
 
     private static final String deleteTransactionQuery =
             "delete from transaction where id = ?";
@@ -69,7 +70,7 @@ public class JDBCTransactionRepository implements TransactionRepository {
 
     @Override
     public Collection<Transaction> findAllTransactions(Long userId) {
-        return jdbcTemplate.queryForList(findAllTransactionForUser, Transaction.class, userId);
+        return jdbcTemplate.query(findAllTransactionForUser, new TransactionMapper(), userId);
     }
 
     @Override

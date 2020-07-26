@@ -13,6 +13,8 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -75,7 +77,9 @@ public class JDBCUserRepository implements UserRepository {
 
         namedParameterJdbcTemplate.update(insertOrUpdateUserQuery, namedParameters, keyHolder, new String[] { "id" });
 
-        Number id = keyHolder.getKey();
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+
+        Number id = (Number) keyList.get(0).get("GENERATED_KEY");
         if (id != null) {
             user.setId(id.longValue());
         }

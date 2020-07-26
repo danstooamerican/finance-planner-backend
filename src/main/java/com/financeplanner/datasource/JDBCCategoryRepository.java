@@ -1,5 +1,6 @@
 package com.financeplanner.datasource;
 
+import com.financeplanner.datasource.mapper.CategoryMapper;
 import com.financeplanner.domain.Category;
 import com.financeplanner.domain.CategoryRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -66,7 +67,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
 
     @Override
     public Collection<Category> findAllCategories() {
-        return jdbcTemplate.queryForList(findAllCategoriesQuery, Category.class);
+        return jdbcTemplate.query(findAllCategoriesQuery, new CategoryMapper());
     }
 
     @Override

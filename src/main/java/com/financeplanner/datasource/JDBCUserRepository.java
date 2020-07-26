@@ -3,6 +3,7 @@ package com.financeplanner.datasource;
 import com.financeplanner.config.security.oauth2.UserRepository;
 import com.financeplanner.datasource.mapper.UserMapper;
 import com.financeplanner.domain.User;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -48,7 +49,13 @@ public class JDBCUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findByEmail(String email) {
-        User user = jdbcTemplate.queryForObject(findByEmailQuery, new UserMapper(), email);
+        User user;
+
+        try {
+            user = jdbcTemplate.queryForObject(findByEmailQuery, new UserMapper(), email);
+        } catch (IncorrectResultSizeDataAccessException ex) { // no user was found
+            user = null;
+        }
 
         return Optional.ofNullable(user);
     }
@@ -78,7 +85,13 @@ public class JDBCUserRepository implements UserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-        User user = jdbcTemplate.queryForObject(findByIdQuery, new UserMapper(), id);
+        User user;
+
+        try {
+            user = jdbcTemplate.queryForObject(findByIdQuery, new UserMapper(), id);
+        } catch (IncorrectResultSizeDataAccessException ex) { // no user was found
+            user = null;
+        }
 
         return Optional.ofNullable(user);
     }

@@ -1,6 +1,5 @@
 package com.financeplanner.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.financeplanner.config.security.AuthProvider;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,10 +19,6 @@ public class User {
     private String name;
     private String email;
     private String imageUrl;
-
-    @JsonIgnore
-    private String password;
-
     private AuthProvider provider;
     private String providerId;
 

@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@link CategoryRepository} which
@@ -60,9 +62,14 @@ public class JDBCCategoryRepository implements CategoryRepository {
 
         namedParameterJdbcTemplate.update(insertOrUpdateCategoryQuery, namedParameters, keyHolder, new String[] { "id" });
 
-        Number id = keyHolder.getKey();
-        if (id != null) {
-            category.setId(id.intValue());
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+
+        if (keyList.size() == 1) {
+            Number id = (Number) keyList.get(0).get("GENERATED_KEY");
+
+            if (id != null) {
+                category.setId(id.intValue());
+            }
         }
     }
 

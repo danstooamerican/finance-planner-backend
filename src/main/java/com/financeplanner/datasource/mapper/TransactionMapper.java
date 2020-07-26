@@ -13,15 +13,38 @@ import java.sql.SQLException;
  */
 public class TransactionMapper implements RowMapper<Transaction> {
 
+    private final String identifier;
+    private final String categoryIdentifier;
+
+    public TransactionMapper(String identifier, String categoryIdentifier) {
+        if (identifier.length() > 0) {
+            this.identifier = identifier + ".";
+            this.categoryIdentifier = categoryIdentifier + ".";
+        } else {
+            this.identifier = "";
+            this.categoryIdentifier = "";
+        }
+    }
+
+    public TransactionMapper(String categoryIdentifier) {
+        this.identifier = "";
+        this.categoryIdentifier = categoryIdentifier;
+    }
+
+    public TransactionMapper() {
+        this.identifier = "";
+        this.categoryIdentifier = "";
+    }
+
     @Override
     public Transaction mapRow(ResultSet resultSet, int i) throws SQLException {
         Transaction transaction = new Transaction();
 
-        transaction.setId(resultSet.getInt("id"));
-        transaction.setAmount(resultSet.getDouble("amount"));
-        transaction.setCategory(new CategoryMapper().mapRow(resultSet, i));
-        transaction.setDate(resultSet.getDate("date").toLocalDate());
-        transaction.setDescription(resultSet.getString("description"));
+        transaction.setId(resultSet.getInt(identifier + "id"));
+        transaction.setAmount(resultSet.getDouble(identifier + "amount"));
+        transaction.setCategory(new CategoryMapper(categoryIdentifier).mapRow(resultSet, i));
+        transaction.setDate(resultSet.getDate(identifier + "date").toLocalDate());
+        transaction.setDescription(resultSet.getString(identifier + "description"));
 
         return transaction;
     }

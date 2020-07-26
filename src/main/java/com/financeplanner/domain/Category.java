@@ -1,9 +1,6 @@
 package com.financeplanner.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 /**
  * Represents a category for {@link Transaction transactions}.
@@ -11,6 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Category {
 
     private int id;
@@ -20,6 +18,7 @@ public class Category {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    @EqualsAndHashCode
     public static class IconData {
 
         private int codePoint;

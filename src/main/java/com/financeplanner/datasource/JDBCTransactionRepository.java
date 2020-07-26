@@ -12,7 +12,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Implementation of {@link TransactionRepository} which
@@ -43,13 +47,18 @@ public class JDBCTransactionRepository implements TransactionRepository {
      *
      * @param dataSource the {@link DataSource data source} which is used to access the data.
      */
-    public JDBCTransactionRepository(DataSource dataSource) {
+    public JDBCTransactionRepository(@NotNull DataSource dataSource) {
+        Objects.requireNonNull(dataSource);
+
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
-    public int save(Transaction transaction, Long userId) {
+    public int save(@NotNull Transaction transaction, @NotNull Long userId) {
+        Objects.requireNonNull(transaction);
+        Objects.requireNonNull(userId);
+
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", transaction.getId())
                 .addValue("amount", transaction.getAmount())
@@ -62,17 +71,27 @@ public class JDBCTransactionRepository implements TransactionRepository {
 
         namedParameterJdbcTemplate.update(insertOrUpdateTransactionQuery, namedParameters, keyHolder, new String[] { "id" });
 
-        Number id = keyHolder.getKey();
-        if (id != null) {
-            return id.intValue();
+        List<Map<String, Object>> keyList = keyHolder.getKeyList();
+
+        if (keyList.size() == 1) {
+            Number id = (Number) keyList.get(0).get("GENERATED_KEY");
+
+            if (id != null) {
+                final int transactionId = id.intValue();
+                transaction.setId(transactionId);
+
+                return transactionId;
+            }
         }
 
         return transaction.getId();
     }
 
     @Override
-    public Collection<Transaction> findAllTransactions(Long userId) {
-        return jdbcTemplate.query(findAllTransactionsForUser, new TransactionMapper(), userId);
+    public Collection<Transaction> findAllTransactions(@NotNull Long userId) {
+        Objects.requireNonNull(userId);
+
+        return jdbcTemplate.query(findAllTransactionsForUser, new TransactionMapper("c"), userId);
     }
 
     @Override

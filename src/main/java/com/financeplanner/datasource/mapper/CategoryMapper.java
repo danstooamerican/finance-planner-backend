@@ -8,17 +8,31 @@ import java.sql.SQLException;
 
 public class CategoryMapper implements RowMapper<Category> {
 
+    private final String identifier;
+
+    public CategoryMapper(String identifier) {
+        if (identifier.length() > 0) {
+            this.identifier = identifier + ".";
+        } else {
+            this.identifier = "";
+        }
+    }
+
+    public CategoryMapper() {
+        this.identifier = "";
+    }
+
     @Override
     public Category mapRow(ResultSet resultSet, int i) throws SQLException {
         Category category = new Category();
 
-        category.setId(resultSet.getInt("id"));
-        category.setName(resultSet.getString("name"));
+        category.setId(resultSet.getInt(identifier + "id"));
+        category.setName(resultSet.getString(identifier + "name"));
 
         Category.IconData icon = new Category.IconData(
-            resultSet.getInt("code_point"),
-            resultSet.getString("font_family"),
-            resultSet.getString("font_package")
+            resultSet.getInt(identifier + "code_point"),
+            resultSet.getString(identifier + "font_family"),
+            resultSet.getString(identifier + "font_package")
         );
 
         category.setIcon(icon);

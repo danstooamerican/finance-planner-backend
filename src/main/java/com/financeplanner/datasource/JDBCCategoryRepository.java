@@ -22,16 +22,16 @@ import java.util.Collection;
 public class JDBCCategoryRepository implements CategoryRepository {
 
     private static final String findAllCategoriesQuery =
-            "select * from category";
+            "select * from category where user_id = ?";
 
     private static final String deleteCategoryQuery =
             "delete from category where id = ?";
 
     private static final String insertOrUpdateCategoryQuery =
-            "insert into category (id, name, code_point, font_family, font_package) " +
-                    "values (:id, :name, :code_point, :font_family, :font_package) on DUPLICATE key " +
+            "insert into category (id, name, code_point, font_family, font_package, user_id) " +
+                    "values (:id, :name, :code_point, :font_family, :font_package, :user_id) on DUPLICATE key " +
                     "update name = :name, code_point = :code_point, " +
-                    "font_family = :font_family, font_package = :font_package";
+                    "font_family = :font_family, font_package = :font_package, user_id = :user_id";
 
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -47,13 +47,14 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void save(Category category) {
+    public void save(Category category, Long userId) {
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", category.getId())
                 .addValue("name", category.getName())
                 .addValue("code_point", category.getIcon().getCodePoint())
                 .addValue("font_family", category.getIcon().getFontFamily())
-                .addValue("font_package", category.getIcon().getFontPackage());
+                .addValue("font_package", category.getIcon().getFontPackage())
+                .addValue("user_id", userId);
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -66,8 +67,8 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Collection<Category> findAllCategories() {
-        return jdbcTemplate.query(findAllCategoriesQuery, new CategoryMapper());
+    public Collection<Category> findAllCategories(Long userId) {
+        return jdbcTemplate.query(findAllCategoriesQuery, new CategoryMapper(), userId);
     }
 
     @Override

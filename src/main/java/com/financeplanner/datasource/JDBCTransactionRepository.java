@@ -22,7 +22,9 @@ import java.util.Collection;
 public class JDBCTransactionRepository implements TransactionRepository {
 
     private static final String findAllTransactionForUser =
-            "select * from transaction join category c on transaction.category_id = c.id where user_id = ?";
+            "select * from transaction " +
+                    "join category c on transaction.category_id = c.id and transaction.user_id = c.user_id " +
+                    "where transaction.user_id = ?";
 
     private static final String deleteTransactionQuery =
             "delete from transaction where id = ?";

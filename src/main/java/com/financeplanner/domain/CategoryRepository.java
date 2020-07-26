@@ -15,13 +15,17 @@ public interface CategoryRepository {
      * If the transaction is already stored all parameters are updated.
      *
      * @param category the {@link Category category} to store.
+     * @param userId the id of the {@link User user}.
      */
-    void save(Category category);
+    void save(Category category, Long userId);
 
     /**
-     * @return all currently stored {@link Category categories}.
+     * Finds all categories belonging to the given {@link User user}.
+     *
+     * @param userId the id of the {@link User user}.
+     * @return all stored {@link Category categories} belonging to the user.
      */
-    Collection<Category> findAllCategories();
+    Collection<Category> findAllCategories(Long userId);
 
     /**
      * Deletes a stored {@link Category category} with the given id.

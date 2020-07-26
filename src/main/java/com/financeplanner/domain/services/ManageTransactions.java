@@ -47,7 +47,7 @@ public class ManageTransactions {
     }
 
     private int saveTransaction(Transaction transaction, Long userId) {
-        categoryRepository.save(transaction.getCategory());
+        categoryRepository.save(transaction.getCategory(), userId);
 
         return transactionRepository.save(transaction, userId);
     }

@@ -1,5 +1,7 @@
 package com.financeplanner.presentation;
 
+import com.financeplanner.config.security.CurrentUser;
+import com.financeplanner.config.security.UserPrincipal;
 import com.financeplanner.domain.Category;
 import com.financeplanner.domain.CategoryRepository;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +32,8 @@ public class CategoryController {
      * @return a list of all currently stored {@link Category categories}.
      */
     @GetMapping("/categories")
-    public ResponseEntity<Collection<Category>> getAllCategories() {
-        return ResponseEntity.ok(categoryRepository.findAllCategories());
+    public ResponseEntity<Collection<Category>> getAllCategories(@CurrentUser UserPrincipal user) {
+        return ResponseEntity.ok(categoryRepository.findAllCategories(user.getId()));
     }
 
 }

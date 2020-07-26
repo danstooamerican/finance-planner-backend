@@ -79,9 +79,12 @@ public class JDBCUserRepository implements UserRepository {
 
         List<Map<String, Object>> keyList = keyHolder.getKeyList();
 
-        Number id = (Number) keyList.get(0).get("GENERATED_KEY");
-        if (id != null) {
-            user.setId(id.longValue());
+        if (!keyList.isEmpty()) {
+            Number id = (Number) keyList.get(0).get("GENERATED_KEY");
+
+            if (id != null) {
+                user.setId(id.longValue());
+            }
         }
 
         return user;

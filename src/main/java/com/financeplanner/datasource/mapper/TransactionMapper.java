@@ -16,24 +16,9 @@ public class TransactionMapper implements RowMapper<Transaction> {
     private final String identifier;
     private final String categoryIdentifier;
 
-    public TransactionMapper(String identifier, String categoryIdentifier) {
-        if (identifier.length() > 0) {
-            this.identifier = identifier + ".";
-            this.categoryIdentifier = categoryIdentifier + ".";
-        } else {
-            this.identifier = "";
-            this.categoryIdentifier = "";
-        }
-    }
-
     public TransactionMapper(String categoryIdentifier) {
         this.identifier = "";
         this.categoryIdentifier = categoryIdentifier;
-    }
-
-    public TransactionMapper() {
-        this.identifier = "";
-        this.categoryIdentifier = "";
     }
 
     @Override

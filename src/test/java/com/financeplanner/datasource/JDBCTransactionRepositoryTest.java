@@ -4,6 +4,7 @@ import com.financeplanner.config.security.AuthProvider;
 import com.financeplanner.domain.Category;
 import com.financeplanner.domain.Transaction;
 import com.financeplanner.domain.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,11 @@ public class JDBCTransactionRepositoryTest {
             AuthProvider.facebook, "provider_id");
 
     private final JDBCTransactionRepository jdbcTransactionRepository;
-    private final JdbcTemplate jdbcTemplate;
+    private static JdbcTemplate jdbcTemplate;
 
     @Autowired
     public JDBCTransactionRepositoryTest(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+        jdbcTemplate = new JdbcTemplate(dataSource);
         this.jdbcTransactionRepository = new JDBCTransactionRepository(dataSource);
 
         JDBCUserRepository jdbcUserRepository = new JDBCUserRepository(dataSource);
@@ -55,6 +56,11 @@ public class JDBCTransactionRepositoryTest {
 
     @AfterEach
     void tearDown() {
+        jdbcTemplate.update(CLEAR_TRANSACTIONS_QUERY);
+    }
+
+    @AfterAll
+    static void clearDatabase() {
         jdbcTemplate.update(CLEAR_TRANSACTIONS_QUERY);
         jdbcTemplate.update(CLEAR_CATEGORIES_QUERY);
         jdbcTemplate.update(CLEAR_USERS_QUERY);

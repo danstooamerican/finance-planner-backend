@@ -91,7 +91,6 @@ public class CategoryMapperTest {
             fail();
         }
 
-        assertNotNull(result);
         assertCategoryMapped(result);
     }
 
@@ -107,11 +106,12 @@ public class CategoryMapperTest {
             fail();
         }
 
-        assertNotNull(result);
         assertCategoryMapped(result);
     }
 
     private void assertCategoryMapped(Category category) {
+        assertNotNull(category);
+
         assertEquals(ID, category.getId());
         assertEquals(NAME, category.getName());
 

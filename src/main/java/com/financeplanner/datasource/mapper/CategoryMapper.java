@@ -1,38 +1,34 @@
 package com.financeplanner.datasource.mapper;
 
 import com.financeplanner.domain.Category;
-import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class CategoryMapper implements RowMapper<Category> {
-
-    private final String identifier;
-
-    public CategoryMapper(String identifier) {
-        if (identifier.length() > 0) {
-            this.identifier = identifier + ".";
-        } else {
-            this.identifier = "";
-        }
-    }
+/**
+ * Maps a {@link ResultSet result set} to a {@link Category category}.
+ */
+public class CategoryMapper extends BaseMapper<Category> {
 
     public CategoryMapper() {
-        this.identifier = "";
+        super();
+    }
+
+    public CategoryMapper(String tableIdentifier) {
+        super(tableIdentifier);
     }
 
     @Override
     public Category mapRow(ResultSet resultSet, int i) throws SQLException {
         Category category = new Category();
 
-        category.setId(resultSet.getInt(identifier + "id"));
-        category.setName(resultSet.getString(identifier + "name"));
+        category.setId(resultSet.getInt(getColumnName("id")));
+        category.setName(resultSet.getString(getColumnName("name")));
 
         Category.IconData icon = new Category.IconData(
-            resultSet.getInt(identifier + "code_point"),
-            resultSet.getString(identifier + "font_family"),
-            resultSet.getString(identifier + "font_package")
+            resultSet.getInt(getColumnName("code_point")),
+            resultSet.getString(getColumnName("font_family")),
+            resultSet.getString(getColumnName("font_package"))
         );
 
         category.setIcon(icon);

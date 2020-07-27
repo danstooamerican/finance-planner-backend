@@ -98,9 +98,7 @@ public class JDBCUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(@NotNull Long id) {
-        Objects.requireNonNull(id);
-
+    public Optional<User> findById(long id) {
         User user;
 
         try {

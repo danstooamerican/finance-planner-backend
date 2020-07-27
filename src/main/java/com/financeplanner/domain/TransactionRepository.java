@@ -21,7 +21,7 @@ public interface TransactionRepository {
      * @param userId the id of the {@link User user} which belongs to the transaction.
      * @return the id of the {@link Transaction transaction}
      */
-    int save(@NotNull Transaction transaction, Long userId);
+    int save(@NotNull Transaction transaction, long userId);
 
     /**
      * Finds all currently stored {@link Transaction transactions} which belong to the {@link User user}.
@@ -29,7 +29,7 @@ public interface TransactionRepository {
      * @param userId the id of the {@link User user}.
      * @return all {@link Transaction transactions}.
      */
-    Collection<Transaction> findAllTransactions(@NotNull Long userId);
+    Collection<Transaction> findAllTransactions(long userId);
 
     /**
      * Deletes a stored {@link Transaction transaction} with the given id.

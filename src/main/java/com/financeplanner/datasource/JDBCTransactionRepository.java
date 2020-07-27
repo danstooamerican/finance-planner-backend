@@ -55,9 +55,8 @@ public class JDBCTransactionRepository implements TransactionRepository {
     }
 
     @Override
-    public int save(@NotNull Transaction transaction, @NotNull Long userId) {
+    public int save(@NotNull Transaction transaction, long userId) {
         Objects.requireNonNull(transaction);
-        Objects.requireNonNull(userId);
 
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", transaction.getId())
@@ -88,9 +87,7 @@ public class JDBCTransactionRepository implements TransactionRepository {
     }
 
     @Override
-    public Collection<Transaction> findAllTransactions(@NotNull Long userId) {
-        Objects.requireNonNull(userId);
-
+    public Collection<Transaction> findAllTransactions(long userId) {
         return jdbcTemplate.query(findAllTransactionsForUser, new TransactionMapper("c"), userId);
     }
 

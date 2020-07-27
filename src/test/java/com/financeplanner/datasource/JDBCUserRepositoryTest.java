@@ -88,13 +88,6 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void findById_null() {
-        assertThrows(NullPointerException.class, () -> {
-            jdbcUserRepository.findById(null);
-        });
-    }
-
-    @Test
     void save_updatesUserId() {
         User user = getUnsavedUser();
 

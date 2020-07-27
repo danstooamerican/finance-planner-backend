@@ -12,9 +12,11 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * Implementation of {@link CategoryRepository} which
@@ -49,7 +51,9 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void save(Category category, Long userId) {
+    public void save(@NotNull Category category, long userId) {
+        Objects.requireNonNull(category);
+
         SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", category.getId())
                 .addValue("name", category.getName())
@@ -74,7 +78,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Collection<Category> findAllCategories(Long userId) {
+    public Collection<Category> findAllCategories(long userId) {
         return jdbcTemplate.query(findAllCategoriesQuery, new CategoryMapper(), userId);
     }
 

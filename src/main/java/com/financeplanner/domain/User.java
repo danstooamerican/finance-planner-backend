@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class User {
 
-    private Long id;
+    private long id;
     private String name;
     private String email;
     private String imageUrl;

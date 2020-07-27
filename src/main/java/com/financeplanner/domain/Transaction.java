@@ -1,17 +1,16 @@
 package com.financeplanner.domain;
 
-import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
+
+import java.time.LocalDate;
 
 /**
  * Represents a transaction which was created by an {@link User user}.
  */
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class Transaction {
 

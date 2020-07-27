@@ -16,7 +16,6 @@ public class Category {
     private IconData icon;
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     @EqualsAndHashCode
     public static class IconData {

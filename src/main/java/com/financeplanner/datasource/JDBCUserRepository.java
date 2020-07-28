@@ -99,7 +99,7 @@ public class JDBCUserRepository implements UserRepository {
             Number id = (Number) keyList.get(0).get("GENERATED_KEY");
 
             if (id != null) {
-                user.setId(id.longValue());
+                user.setId(id.intValue());
             }
         }
 
@@ -107,7 +107,7 @@ public class JDBCUserRepository implements UserRepository {
     }
 
     @Override
-    public Optional<User> findById(long id) {
+    public Optional<User> findById(int id) {
         User user;
 
         try {

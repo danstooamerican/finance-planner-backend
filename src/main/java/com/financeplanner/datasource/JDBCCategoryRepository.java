@@ -63,7 +63,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public void save(@NotNull Category category, long userId) {
+    public void save(@NotNull Category category, int userId) {
         Objects.requireNonNull(category);
 
         SqlParameterSource namedParameters = new MapSqlParameterSource()
@@ -90,7 +90,7 @@ public class JDBCCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Collection<Category> findAllCategories(long userId) {
+    public Collection<Category> findAllCategories(int userId) {
         return jdbcTemplate.query(findAllCategoriesQuery, new CategoryMapper(), userId);
     }
 

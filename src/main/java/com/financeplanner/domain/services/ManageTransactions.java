@@ -39,7 +39,7 @@ public class ManageTransactions {
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      * @return the id of the new {@link Transaction transaction}.
      */
-    public int addTransaction(@NotNull Transaction transaction, long userId) {
+    public int addTransaction(@NotNull Transaction transaction, int userId) {
         Objects.requireNonNull(transaction);
 
         return saveTransaction(transaction, userId);
@@ -51,13 +51,13 @@ public class ManageTransactions {
      * @param transaction the new {@link Transaction transaction}.
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      */
-    public void editTransaction(@NotNull Transaction transaction, long userId) {
+    public void editTransaction(@NotNull Transaction transaction, int userId) {
         Objects.requireNonNull(transaction);
 
         saveTransaction(transaction, userId);
     }
 
-    private int saveTransaction(Transaction transaction, long userId) {
+    private int saveTransaction(Transaction transaction, int userId) {
         categoryRepository.save(transaction.getCategory(), userId);
 
         return transactionRepository.save(transaction, userId);
@@ -78,7 +78,7 @@ public class ManageTransactions {
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transactions}.
      * @return all added {@link Transaction transactions}.
      */
-    public Collection<Transaction> getAllTransactions(long userId) {
+    public Collection<Transaction> getAllTransactions(int userId) {
         return transactionRepository.findAllTransactions(userId);
     }
 

@@ -19,7 +19,7 @@ public class JDBCUserRepositoryTest {
 
     private static final String CLEAR_USERS_QUERY = "delete from user";
 
-    private static final Long ID_NOT_SAVED = 0L;
+    private static final int ID_NOT_SAVED = 0;
     private static final String NAME = "user_name";
     private static final String IMAGE_URL = "image_url";
     private static final String EMAIL = "email";
@@ -134,7 +134,7 @@ public class JDBCUserRepositoryTest {
         User user = getUnsavedUser();
         jdbcUserRepository.save(user);
 
-        Long oldId = user.getId();
+        int oldId = user.getId();
 
         final String expectedEmail = user.getEmail() + "_changed";
         user.setEmail(expectedEmail);

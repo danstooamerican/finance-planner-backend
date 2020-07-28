@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 public class CategoryControllerTest {
 
-    private static final long USER_ID = 0L;
+    private static final int USER_ID = 0;
 
     @Mock
     private CategoryRepository categoryRepository;

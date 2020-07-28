@@ -34,7 +34,7 @@ public class ManageTransactionsTest {
 
     private ManageTransactions manageTransactions;
 
-    private final long userId = 0;
+    private final int userId = 0;
     private final int transactionId = 0;
 
     @BeforeEach

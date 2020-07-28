@@ -35,10 +35,10 @@ public class JDBCTransactionRepositoryTest {
     private static final Category CATEGORY = new Category(0, "name",
             new Category.IconData(42, "font_family", "font_package"));
 
-    private final User user = new User(0L, "name", "email", "image_url",
+    private final User user = new User(0, "name", "email", "image_url",
             AuthProvider.facebook, "provider_id");
 
-    private final User otherUser = new User(0L, "name2", "email2", "image_url2",
+    private final User otherUser = new User(0, "name2", "email2", "image_url2",
             AuthProvider.google, "provider_id2");
 
     private final JDBCTransactionRepository jdbcTransactionRepository;
@@ -189,7 +189,7 @@ public class JDBCTransactionRepositoryTest {
         assertEquals(expected.getId(), actual.getId());
     }
 
-    private Transaction getSingleTransactionFromDatabase(long userId) {
+    private Transaction getSingleTransactionFromDatabase(int userId) {
         Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(userId);
         assertEquals(1, transactions.size());
 

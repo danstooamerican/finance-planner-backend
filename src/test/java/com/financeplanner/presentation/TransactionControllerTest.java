@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 
 public class TransactionControllerTest {
 
-    private static final long USER_ID = 0L;
+    private static final int USER_ID = 0;
     private static final int TRANSACTION_ID = 42;
 
     @Mock

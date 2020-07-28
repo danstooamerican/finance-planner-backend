@@ -19,7 +19,7 @@ public interface CategoryRepository {
      * @param category the {@link Category category} to store.
      * @param userId the id of the {@link User user}.
      */
-    void save(Category category, long userId);
+    void save(Category category, int userId);
 
     /**
      * Finds all categories belonging to the given {@link User user}.
@@ -27,7 +27,7 @@ public interface CategoryRepository {
      * @param userId the id of the {@link User user}.
      * @return all stored {@link Category categories} belonging to the user.
      */
-    Collection<Category> findAllCategories(long userId);
+    Collection<Category> findAllCategories(int userId);
 
     /**
      * Deletes a stored {@link Category category} with the given id.

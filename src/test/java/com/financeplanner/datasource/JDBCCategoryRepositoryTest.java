@@ -33,10 +33,10 @@ public class JDBCCategoryRepositoryTest {
     private static final String FONT_PACKAGE = "font_package";
     private static final int CODE_POINT = 42;
 
-    private final User user = new User(0L, "name", "email", "image_url",
+    private final User user = new User(0, "name", "email", "image_url",
             AuthProvider.facebook, "provider_id");
 
-    private final User otherUser = new User(0L, "name2", "email2", "image_url2",
+    private final User otherUser = new User(0, "name2", "email2", "image_url2",
             AuthProvider.facebook, "provider_id2");
 
     private final JDBCCategoryRepository jdbcCategoryRepository;
@@ -181,7 +181,7 @@ public class JDBCCategoryRepositoryTest {
         return new Category.IconData(CODE_POINT, FONT_FAMILY, FONT_PACKAGE);
     }
 
-    private Category getSingleCategoryFromDatabase(long userId) {
+    private Category getSingleCategoryFromDatabase(int userId) {
         Collection<Category> categories = jdbcCategoryRepository.findAllCategories(userId);
         assertEquals(1, categories.size());
 

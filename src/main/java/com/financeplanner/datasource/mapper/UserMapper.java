@@ -19,7 +19,7 @@ public class UserMapper extends BaseMapper<User> {
     public User mapRow(ResultSet resultSet, int i) throws SQLException {
         User user = new User();
 
-        user.setId(resultSet.getLong(getColumnName("id")));
+        user.setId(resultSet.getInt(getColumnName("id")));
         user.setEmail(resultSet.getString(getColumnName("email")));
         user.setName(resultSet.getString(getColumnName("name")));
         user.setProvider(AuthProvider.valueOf(resultSet.getString(getColumnName("provider"))));

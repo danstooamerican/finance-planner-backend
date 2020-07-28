@@ -35,6 +35,6 @@ public interface UserRepository {
      * @param id the id of the {@link User user}.
      * @return the {@link User user} with the id wrapped in an {@link Optional}.
      */
-    Optional<User> findById(long id);
+    Optional<User> findById(int id);
 
 }

@@ -25,6 +25,16 @@ import java.util.Objects;
 @Repository
 public class JDBCCategoryRepository implements CategoryRepository {
 
+    public static final String createCategoriesTable = "CREATE TABLE IF NOT EXISTS category (" +
+            "  id int NOT NULL AUTO_INCREMENT," +
+            "  name varchar(50) NOT NULL," +
+            "  code_point int NOT NULL," +
+            "  font_family varchar(50) NOT NULL," +
+            "  font_package varchar(50) DEFAULT NULL," +
+            "  user_id int NOT NULL," +
+            "  PRIMARY KEY (id)," +
+            "  FOREIGN KEY (user_id) REFERENCES user (id))";
+
     private static final String findAllCategoriesQuery =
             "select * from category where user_id = ?";
 

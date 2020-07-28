@@ -25,6 +25,17 @@ import java.util.Objects;
 @Repository
 public class JDBCTransactionRepository implements TransactionRepository {
 
+    public static final String createTransactionsTable = "CREATE TABLE IF NOT EXISTS transaction (" +
+            "  id int NOT NULL AUTO_INCREMENT," +
+            "  amount decimal(10,2) NOT NULL," +
+            "  description varchar(1000) NOT NULL," +
+            "  date date NOT NULL," +
+            "  category_id int NOT NULL," +
+            "  user_id int NOT NULL," +
+            "  PRIMARY KEY (id)," +
+            "  FOREIGN KEY (user_id) REFERENCES user (id)," +
+            "  FOREIGN KEY (category_id) REFERENCES category (id))";
+
     private static final String findAllTransactionsForUser =
             "select * from transaction " +
                     "join category c on transaction.category_id = c.id and transaction.user_id = c.user_id " +

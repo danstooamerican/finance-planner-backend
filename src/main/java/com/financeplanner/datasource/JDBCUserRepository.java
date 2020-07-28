@@ -26,6 +26,15 @@ import java.util.Optional;
 @Repository
 public class JDBCUserRepository implements UserRepository {
 
+    public static final String createUsersTable = "CREATE TABLE IF NOT EXISTS user (" +
+            "  id int NOT NULL AUTO_INCREMENT," +
+            "  name varchar(150) NOT NULL," +
+            "  provider varchar(50) NOT NULL," +
+            "  provider_id varchar(50) NOT NULL," +
+            "  email varchar(100) NOT NULL," +
+            "  image_url varchar(500) DEFAULT NULL," +
+            "  PRIMARY KEY (id))";
+
     private static final String findByEmailQuery =
             "select * from user where email = ? limit 1";
 

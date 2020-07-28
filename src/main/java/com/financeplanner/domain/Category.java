@@ -15,14 +15,17 @@ public class Category {
     private String name;
     private IconData icon;
 
+    /**
+     * Represents an icon from the app.
+     */
     @Getter
     @AllArgsConstructor
     @EqualsAndHashCode
     public static class IconData {
 
-        private int codePoint;
-        private String fontFamily;
-        private String fontPackage;
+        private final int codePoint;
+        private final String fontFamily;
+        private final String fontPackage;
 
     }
 

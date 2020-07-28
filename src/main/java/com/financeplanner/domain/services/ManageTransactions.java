@@ -3,7 +3,11 @@ package com.financeplanner.domain.services;
 import com.financeplanner.domain.*;
 
 import java.util.Collection;
+import java.util.Objects;
+
 import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * Service class which manages {@link Transaction} objects.
@@ -20,7 +24,10 @@ public class ManageTransactions {
      * @param transactionRepository used to access {@link Transaction} objects.
      * @param categoryRepository used to access {@link Category} objects.
      */
-    public ManageTransactions(TransactionRepository transactionRepository, CategoryRepository categoryRepository) {
+    public ManageTransactions(@NotNull TransactionRepository transactionRepository, @NotNull CategoryRepository categoryRepository) {
+        Objects.requireNonNull(transactionRepository);
+        Objects.requireNonNull(categoryRepository);
+
         this.transactionRepository = transactionRepository;
         this.categoryRepository = categoryRepository;
     }
@@ -32,7 +39,9 @@ public class ManageTransactions {
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      * @return the id of the new {@link Transaction transaction}.
      */
-    public int addTransaction(Transaction transaction, Long userId) {
+    public int addTransaction(@NotNull Transaction transaction, long userId) {
+        Objects.requireNonNull(transaction);
+
         return saveTransaction(transaction, userId);
     }
 
@@ -42,11 +51,13 @@ public class ManageTransactions {
      * @param transaction the new {@link Transaction transaction}.
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transaction}.
      */
-    public void editTransaction(Transaction transaction, Long userId) {
+    public void editTransaction(@NotNull Transaction transaction, long userId) {
+        Objects.requireNonNull(transaction);
+
         saveTransaction(transaction, userId);
     }
 
-    private int saveTransaction(Transaction transaction, Long userId) {
+    private int saveTransaction(Transaction transaction, long userId) {
         categoryRepository.save(transaction.getCategory(), userId);
 
         return transactionRepository.save(transaction, userId);
@@ -67,7 +78,7 @@ public class ManageTransactions {
      * @param userId the id of the {@link User user} which belongs to the {@link Transaction transactions}.
      * @return all added {@link Transaction transactions}.
      */
-    public Collection<Transaction> getAllTransactions(Long userId) {
+    public Collection<Transaction> getAllTransactions(long userId) {
         return transactionRepository.findAllTransactions(userId);
     }
 

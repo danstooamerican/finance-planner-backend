@@ -2,6 +2,7 @@ package com.financeplanner.datasource;
 
 import com.financeplanner.config.security.AuthProvider;
 import com.financeplanner.domain.Category;
+import com.financeplanner.domain.Transaction;
 import com.financeplanner.domain.User;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -13,7 +14,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,7 +36,7 @@ public class JDBCCategoryRepositoryTest {
     private final User user = new User(0L, "name", "email", "image_url",
             AuthProvider.facebook, "provider_id");
 
-    private final User user2 = new User(0L, "name2", "email2", "image_url2",
+    private final User otherUser = new User(0L, "name2", "email2", "image_url2",
             AuthProvider.facebook, "provider_id2");
 
     private final JDBCCategoryRepository jdbcCategoryRepository;
@@ -46,7 +49,7 @@ public class JDBCCategoryRepositoryTest {
 
         JDBCUserRepository jdbcUserRepository = new JDBCUserRepository(dataSource);
         jdbcUserRepository.save(user);
-        jdbcUserRepository.save(user2);
+        jdbcUserRepository.save(otherUser);
     }
 
     @AfterEach
@@ -61,30 +64,51 @@ public class JDBCCategoryRepositoryTest {
     }
 
     @Test
-    void save_null() {
-        assertThrows(NullPointerException.class, () -> jdbcCategoryRepository.save(null, ID_NOT_SAVED));
+    void save_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> {
+            jdbcCategoryRepository.save(null, user.getId());
+        });
     }
 
     @Test
-    void save_unsaved() {
+    void save_notExists_updatesCategoryId() {
         Category category = getUnsavedCategory();
         jdbcCategoryRepository.save(category, user.getId());
 
         assertNotEquals(ID_NOT_SAVED, category.getId());
+    }
 
-        Collection<Category> categories = jdbcCategoryRepository.findAllCategories(user.getId());
-        assertEquals(1, categories.size());
-        Category dbCategory = categories.stream().findFirst().get();
+    @Test
+    void save_notExists_savesCategory() {
+        Category category = getUnsavedCategory();
+        jdbcCategoryRepository.save(category, user.getId());
+
+        Category dbCategory = getSingleCategoryFromDatabase(user.getId());
 
         assertCategoryEquals(category, dbCategory);
     }
 
     @Test
-    void save_overwrite() {
+    void save_exists_updatesCategory() {
         Category category = getUnsavedCategory();
         jdbcCategoryRepository.save(category, user.getId());
 
-        assertNotEquals(ID_NOT_SAVED, category.getId());
+        String expectedName = NAME + 1;
+        category.setName(expectedName);
+
+        jdbcCategoryRepository.save(category, user.getId());
+
+        Category dbCategory = getSingleCategoryFromDatabase(user.getId());
+
+        assertEquals(expectedName, category.getName());
+
+        assertCategoryEquals(category, dbCategory);
+    }
+
+    @Test
+    void save_exists_noIdChange() {
+        Category category = getUnsavedCategory();
+        jdbcCategoryRepository.save(category, user.getId());
 
         String expectedName = NAME + 1;
         category.setName(expectedName);
@@ -92,59 +116,55 @@ public class JDBCCategoryRepositoryTest {
         int old_id = category.getId();
         jdbcCategoryRepository.save(category, user.getId());
 
-        Collection<Category> categories = jdbcCategoryRepository.findAllCategories(user.getId());
-        assertEquals(1, categories.size());
-        Category dbCategory = categories.stream().findFirst().get();
-
         assertEquals(old_id, category.getId());
-        assertEquals(expectedName, category.getName());
-
-        assertCategoryEquals(category, dbCategory);
     }
 
     @Test
-    void delete_notExisting() {
+    void delete_notExists_noException() {
         assertDoesNotThrow(() -> jdbcCategoryRepository.delete(ID_NOT_SAVED));
     }
 
     @Test
-    void delete_existing() {
+    void delete_exists_deletesExisting() {
         Category category = getUnsavedCategory();
         jdbcCategoryRepository.save(category, user.getId());
 
         jdbcCategoryRepository.delete(category.getId());
-        assertTrue(jdbcCategoryRepository.findAllCategories(user.getId()).isEmpty());
-    }
-
-    @Test
-    void findAllCategories_noResults() {
-        assertTrue(jdbcCategoryRepository.findAllCategories(user.getId()).isEmpty());
-    }
-
-    @Test
-    void findAllCategories_multipleResults() {
-        Category category = getUnsavedCategory();
-        jdbcCategoryRepository.save(category, user.getId());
-
-        category = getUnsavedCategory();
-        jdbcCategoryRepository.save(category, user.getId());
-
-        assertEquals(2, jdbcCategoryRepository.findAllCategories(user.getId()).size());
-    }
-
-    @Test
-    void findAllCategories_differentUsers() {
-        Category category = getUnsavedCategory();
-        jdbcCategoryRepository.save(category, user.getId());
-
-        Category category2 = getUnsavedCategory();
-        jdbcCategoryRepository.save(category2, user2.getId());
 
         Collection<Category> categories = jdbcCategoryRepository.findAllCategories(user.getId());
-        assertEquals(1, categories.size());
-        Category dbCategory = categories.stream().findFirst().get();
+        assertTrue(categories.isEmpty());
+    }
 
-        assertCategoryEquals(category, dbCategory);
+    @Test
+    void findAllCategories_noSaved_findsNoResults() {
+        Collection<Category> categories = jdbcCategoryRepository.findAllCategories(user.getId());
+
+        assertNotNull(categories);
+        assertTrue(categories.isEmpty());
+    }
+
+    @Test
+    void findAllCategories_onlyUsersCategories() {
+        Category category1 = getUnsavedCategory();
+        jdbcCategoryRepository.save(category1, user.getId());
+
+        Category category2 = getUnsavedCategory();
+        jdbcCategoryRepository.save(category2, user.getId());
+
+        Category otherCategory = getUnsavedCategory();
+        jdbcCategoryRepository.save(otherCategory, otherUser.getId());
+
+        Collection<Category> categories = jdbcCategoryRepository.findAllCategories(user.getId());
+
+        assertNotNull(categories);
+        assertEquals(2, categories.size());
+
+        List<Category> categoriesList = categories.stream()
+                .sorted(Comparator.comparingInt(Category::getId))
+                .collect(Collectors.toList());
+
+        assertCategoryEquals(category1, categoriesList.get(0));
+        assertCategoryEquals(category2, categoriesList.get(1));
     }
 
     private void assertCategoryEquals(Category expected, Category actual) {
@@ -159,5 +179,12 @@ public class JDBCCategoryRepositoryTest {
 
     private Category.IconData getIcon() {
         return new Category.IconData(CODE_POINT, FONT_FAMILY, FONT_PACKAGE);
+    }
+
+    private Category getSingleCategoryFromDatabase(long userId) {
+        Collection<Category> categories = jdbcCategoryRepository.findAllCategories(userId);
+        assertEquals(1, categories.size());
+
+        return categories.stream().findFirst().get();
     }
 }

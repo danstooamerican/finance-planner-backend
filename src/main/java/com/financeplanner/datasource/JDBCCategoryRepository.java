@@ -45,7 +45,9 @@ public class JDBCCategoryRepository implements CategoryRepository {
      *
      * @param dataSource the {@link DataSource data source} which is used to access the data.
      */
-    public JDBCCategoryRepository(DataSource dataSource) {
+    public JDBCCategoryRepository(@NotNull DataSource dataSource) {
+        Objects.requireNonNull(dataSource);
+
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }

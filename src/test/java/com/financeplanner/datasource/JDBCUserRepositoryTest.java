@@ -41,14 +41,14 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void findByEmail_noUserExists() {
+    void findByEmail_notExists_findsNoUser() {
         Optional<User> user = jdbcUserRepository.findByEmail(EMAIL);
 
         assertFalse(user.isPresent());
     }
 
     @Test
-    void findByEmail_userExists() {
+    void findByEmail_exists_findsUser() {
         User expectedUser = jdbcUserRepository.save(getUnsavedUser());
 
         Optional<User> userOptional = jdbcUserRepository.findByEmail(EMAIL);
@@ -61,21 +61,21 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void findByEmail_null() {
+    void findByEmail_null_noException() {
         assertThrows(NullPointerException.class, () -> {
             jdbcUserRepository.findByEmail(null);
         });
     }
 
     @Test
-    void findById_noUserExists() {
+    void findById_notExists_findsNoUser() {
         Optional<User> user = jdbcUserRepository.findById(ID_NOT_SAVED);
 
         assertFalse(user.isPresent());
     }
 
     @Test
-    void findById_userExists() {
+    void findById_exists_findsUser() {
         User expectedUser = jdbcUserRepository.save(getUnsavedUser());
 
         Optional<User> userOptional = jdbcUserRepository.findById(expectedUser.getId());
@@ -88,7 +88,7 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void save_updatesUserId() {
+    void save_notExists_updatesUserId() {
         User user = getUnsavedUser();
 
         User returned = jdbcUserRepository.save(user);
@@ -98,7 +98,7 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void save_userSaved() {
+    void save_notExists_savesUser() {
         User user = getUnsavedUser();
 
         User savedUser = jdbcUserRepository.save(user);
@@ -113,18 +113,13 @@ public class JDBCUserRepositoryTest {
     }
 
     @Test
-    void save_updatesUser_idDoesntChange() {
+    void save_exists_updatesUser() {
         User user = getUnsavedUser();
-        final String expectedEmail = user.getEmail() + "_changed";
-
         jdbcUserRepository.save(user);
 
-        Long userId = user.getId();
-
+        final String expectedEmail = user.getEmail() + "_changed";
         user.setEmail(expectedEmail);
         jdbcUserRepository.save(user);
-
-        assertEquals(userId, user.getId());
 
         Optional<User> actualOptional = jdbcUserRepository.findByEmail(user.getEmail());
 
@@ -132,6 +127,20 @@ public class JDBCUserRepositoryTest {
         User actual = actualOptional.get();
 
         assertUserEquals(user, actual);
+    }
+
+    @Test
+    void save_exists_noIdChange() {
+        User user = getUnsavedUser();
+        jdbcUserRepository.save(user);
+
+        Long oldId = user.getId();
+
+        final String expectedEmail = user.getEmail() + "_changed";
+        user.setEmail(expectedEmail);
+        jdbcUserRepository.save(user);
+
+        assertEquals(oldId, user.getId());
     }
 
     private User getUnsavedUser() {

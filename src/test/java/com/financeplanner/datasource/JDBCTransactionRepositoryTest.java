@@ -38,6 +38,9 @@ public class JDBCTransactionRepositoryTest {
     private final User user = new User(0L, "name", "email", "image_url",
             AuthProvider.facebook, "provider_id");
 
+    private final User otherUser = new User(0L, "name2", "email2", "image_url2",
+            AuthProvider.google, "provider_id2");
+
     private final JDBCTransactionRepository jdbcTransactionRepository;
     private static JdbcTemplate jdbcTemplate;
 
@@ -48,6 +51,7 @@ public class JDBCTransactionRepositoryTest {
 
         JDBCUserRepository jdbcUserRepository = new JDBCUserRepository(dataSource);
         jdbcUserRepository.save(user);
+        jdbcUserRepository.save(otherUser);
 
         JDBCCategoryRepository jdbcCategoryRepository = new JDBCCategoryRepository(dataSource);
         jdbcCategoryRepository.save(CATEGORY, user.getId());
@@ -66,12 +70,12 @@ public class JDBCTransactionRepositoryTest {
     }
 
     @Test
-    void delete_notExists() {
+    void delete_notExists_noException() {
         assertDoesNotThrow(() -> jdbcTransactionRepository.delete(ID_NOT_SAVED));
     }
 
     @Test
-    void delete_exists() {
+    void delete_exists_deletesExisting() {
         int id = jdbcTransactionRepository.save(getUnsavedTransaction(), user.getId());
 
         jdbcTransactionRepository.delete(id);
@@ -82,7 +86,14 @@ public class JDBCTransactionRepositoryTest {
     }
 
     @Test
-    void save_updatedTransactionId() {
+    void save_null_throwsNullPointerException() {
+        assertThrows(NullPointerException.class, () -> {
+            jdbcTransactionRepository.save(null, user.getId());
+        });
+    }
+
+    @Test
+    void save_notExists_updatesTransactionId() {
         Transaction transaction = getUnsavedTransaction();
 
         int id = jdbcTransactionRepository.save(transaction, user.getId());
@@ -92,51 +103,60 @@ public class JDBCTransactionRepositoryTest {
     }
 
     @Test
-    void save_transactionSaved() {
+    void save_notExists_savesTransaction() {
         Transaction transaction = getUnsavedTransaction();
 
         jdbcTransactionRepository.save(transaction, user.getId());
 
-        Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(user.getId());
+        Transaction dbTransaction = getSingleTransactionFromDatabase(user.getId());
 
-        assertEquals(1, transactions.size());
-        Transaction actual = transactions.stream().findFirst().get();
-
-        assertTransactionEquals(transaction, actual);
+        assertTransactionEquals(transaction, dbTransaction);
     }
 
     @Test
-    void save_updatesTransaction_idDoesntChange() {
+    void save_exists_updatesTransaction() {
         Transaction transaction = getUnsavedTransaction();
         final double expectedAmount = transaction.getAmount() + 1;
 
-        int id = jdbcTransactionRepository.save(transaction, user.getId());
-
+        jdbcTransactionRepository.save(transaction, user.getId());
 
         transaction.setAmount(expectedAmount);
         jdbcTransactionRepository.save(transaction, user.getId());
 
-        assertEquals(id, transaction.getId());
+        Transaction dbTransaction = getSingleTransactionFromDatabase(user.getId());
 
-        Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(user.getId());
-
-        assertEquals(1, transactions.size());
-        Transaction actual = transactions.stream().findFirst().get();
-
-        assertTransactionEquals(transaction, actual);
+        assertEquals(expectedAmount, dbTransaction.getAmount());
+        assertEquals(expectedAmount, transaction.getAmount());
+        assertTransactionEquals(transaction, dbTransaction);
     }
 
     @Test
-    void findAllTransactions_noResults() {
+    void save_exists_noIdChange() {
+        Transaction transaction = getUnsavedTransaction();
+        final double expectedAmount = transaction.getAmount() + 1;
+
+        int oldId = jdbcTransactionRepository.save(transaction, user.getId());
+
+        transaction.setAmount(expectedAmount);
+        jdbcTransactionRepository.save(transaction, user.getId());
+
+        assertEquals(oldId, transaction.getId());
+    }
+
+    @Test
+    void findAllTransactions_noSaved_findsNoResults() {
         Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(user.getId());
 
+        assertNotNull(transactions);
         assertTrue(transactions.isEmpty());
     }
 
     @Test
-    void findAllTransactions_multipleResults() {
+    void findAllTransactions_onlyUsersTransactions() {
         int id1 = jdbcTransactionRepository.save(getUnsavedTransaction(), user.getId());
         int id2 = jdbcTransactionRepository.save(getUnsavedTransaction(), user.getId());
+
+        jdbcTransactionRepository.save(getUnsavedTransaction(), otherUser.getId());
 
         Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(user.getId());
 
@@ -167,6 +187,13 @@ public class JDBCTransactionRepositoryTest {
         assertEquals(expected.getName(), actual.getName());
         assertEquals(expected.getIcon(), actual.getIcon());
         assertEquals(expected.getId(), actual.getId());
+    }
+
+    private Transaction getSingleTransactionFromDatabase(long userId) {
+        Collection<Transaction> transactions = jdbcTransactionRepository.findAllTransactions(userId);
+        assertEquals(1, transactions.size());
+
+        return transactions.stream().findFirst().get();
     }
 
 }

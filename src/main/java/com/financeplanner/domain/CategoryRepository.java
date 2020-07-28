@@ -14,6 +14,8 @@ public interface CategoryRepository {
      * Stores a given {@link Category category}.
      * If the transaction is already stored all parameters are updated.
      *
+     * Side effect: The id of the {@link Category category} which is passed in as a parameter is updated.
+     *
      * @param category the {@link Category category} to store.
      * @param userId the id of the {@link User user}.
      */

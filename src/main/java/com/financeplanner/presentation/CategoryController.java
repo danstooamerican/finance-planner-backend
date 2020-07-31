@@ -34,6 +34,9 @@ public class CategoryController {
     }
 
     /**
+     * Finds all categories belonging to the given user.
+     *
+     * @param user the currently authenticated {@link UserPrincipal user}.
      * @return a list of all currently stored {@link Category categories} belonging to the
      * authenticated {@link UserPrincipal user}.
      */

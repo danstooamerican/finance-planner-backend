@@ -21,6 +21,7 @@ public class DatabaseInitializer {
         jdbcTemplate.update(JDBCUserRepository.createUsersTable);
         jdbcTemplate.update(JDBCCategoryRepository.createCategoriesTable);
         jdbcTemplate.update(JDBCTransactionRepository.createTransactionsTable);
+        jdbcTemplate.update(JDBCStatisticsRepository.createCurrentMonthBalanceView);
     }
 
 }

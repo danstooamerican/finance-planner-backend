@@ -17,6 +17,8 @@ public interface TransactionRepository {
      *
      * Side effect: The id of the {@link Transaction transaction} which is passed in as a parameter is also updated.
      *
+     * Warning: The amount can be truncated by the database.
+     *
      * @param transaction the {@link Transaction transaction} to store.
      * @param userId the id of the {@link User user} which belongs to the transaction.
      * @return the id of the {@link Transaction transaction}

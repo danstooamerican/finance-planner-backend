@@ -31,9 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Transactional
     public UserDetails loadUserById(int id) {
-        User user = userRepository.findById(id).orElseThrow(
-                () -> new IllegalArgumentException("User | id: " + id)
-        );
+        User user = userRepository.findById(id).orElseThrow(IllegalArgumentException::new);
 
         return UserPrincipal.create(user);
     }

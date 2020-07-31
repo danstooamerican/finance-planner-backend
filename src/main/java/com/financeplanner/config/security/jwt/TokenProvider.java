@@ -2,12 +2,7 @@ package com.financeplanner.config.security.jwt;
 
 import com.financeplanner.config.AppProperties;
 import com.financeplanner.config.security.UserPrincipal;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -32,13 +27,10 @@ public class TokenProvider {
     public String createToken(Authentication authentication) {
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
-
         return Jwts.builder()
                 .setSubject(Long.toString(userPrincipal.getId()))
                 .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .setExpiration(null)
                 .signWith(getSigningKey(), signatureAlgorithm)
                 .compact();
     }
@@ -59,6 +51,12 @@ public class TokenProvider {
         return Long.parseLong(claims.getSubject());
     }
 
+    /**
+     * This method checks if the authToken was signed with the application secret.
+     *
+     * @param authToken the token to be checked.
+     * @return whether the token was signed by this application.
+     */
     public boolean validateToken(String authToken) {
         try {
             /*

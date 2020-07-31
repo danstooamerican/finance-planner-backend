@@ -29,7 +29,6 @@ spring:
 app:
     auth:
         tokenSecret: token_secret
-        tokenExpirationMsec: expiration_time
     oauth2:
         authorizedRedirectUris:
             - financeplanner://oauth2/redirect
